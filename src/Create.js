@@ -11,8 +11,8 @@ const Create = () => {
 
   const [err, setErr] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [image, setImage] = useState(null);
-  const [file, setFile] = useState(null);
+  /* const [image , setImage ] = useState(null);
+    const [file , setFile] = useState(null); */
   const [post, setPost] = useState({
     title: "",
     snippet: "",
@@ -82,46 +82,42 @@ const Create = () => {
   };
 
   // Display Image and set it
-  const imgChange = (img) => {
-    // Change the img when uploaded
-    const reader = new FileReader();
-    reader.readAsDataURL(img.files[0]);
-    reader.onloadend = (e) => {
-      // Check image type
-      let ext = e.target.result.split(";");
-      ext = ext[0].split("/")[1];
+  /* const imgChange = (img) => {
+        // Change the img when uploaded
+        const reader = new FileReader();
+        reader.readAsDataURL(img.files[0]);
+        reader.onloadend = e =>{
 
-      if (!exts.includes(ext)) {
-        // It's not an image
-        setErr("Error! Please upload an image(png , jpg , webp)!");
-      } else {
-        // Remove err msg if found
-        setErr(null);
-        // Set it
-        setImage(e.target.result);
-        //Upload it
-        setLoading(true);
+            // Check image type
+            let ext = (e.target.result).split(';');
+            ext = ext[0].split('/')[1];
 
-        const form = new FormData();
-        form.append("image", reader.result);
+            if(!exts.includes(ext)){
+                // It's not an image
+                setErr('Error! Please upload an image(png , jpg , webp)!'); 
+            }else{
+                // Remove err msg if found
+                setErr(null);
+                // Set it
+                setImage(e.target.result);  
+                //Upload it
+                setLoading(true);
 
-        fetch(
-          `https://api.imgbb.com/1/upload?&key=ba3571b3fdc4fda51b773e9d905f3d0b&image=${
-            reader.result.split(",")[1]
-          }`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        )
-          .then((res) => res.json())
-          .then((data) => console.log(data))
-          .catch((err) => console.log(err.message));
-      }
-    };
-  };
+                const form = new FormData();
+                form.append('image' , reader.result);
+
+                fetch(`https://api.imgbb.com/1/upload?&key=ba3571b3fdc4fda51b773e9d905f3d0b&image=${(reader.result).split(',')[1]}`,{
+                    method:'POST',
+                    headers:{
+                        'Content-Type': "multipart/form-data"
+                    }
+                })
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(err => console.log(err.message));
+            }
+        }; 
+    }; */
 
   return (
     <div className="create">
@@ -181,50 +177,37 @@ const Create = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-primary resize-none h-96"
           ></textarea>
 
-          <label
-            htmlFor="img"
-            className="block text-gray-700 text-sm font-bold mb-2 mt-4"
-          >
-            Image:
-          </label>
-          <input
-            type="file"
-            name="img"
-            ref={mainImg}
-            className="hidden"
-            onChange={(event) => imgChange(event.target)}
-          />
+          {/* <label htmlFor="img" className='block text-gray-700 text-sm font-bold mb-2 mt-4'>Image:</label>
+                        <input 
+                            type="file"
+                            name='img'
+                            ref={mainImg}
+                            className='hidden'
+                            onChange={event => imgChange(event.target)}
+                        />
 
-          {image && (
-            <img
-              src={image}
-              alt="Post"
-              className="my-5 w-100 rounded md:w-1/2 transition duration-500 ease-in-out"
-            />
-          )}
+                        { image && <img src={image} alt='Post' className='my-5 w-100 rounded md:w-1/2 transition duration-500 ease-in-out' /> }
 
-          <div
-            className="block shadow appearance-none border w-32 cursor-pointer text-lg text-center rounded p-5 my-5 transition duration-500 ease-in-out hover:border-primary "
-            id="img"
-            onClick={() => mainImg.current.click()}
-          >
-            {!image ? "Upload" : "Replace"}
-          </div>
-
+                        
+                        <div className="block shadow appearance-none border w-32 cursor-pointer text-lg text-center rounded p-5 my-5 transition duration-500 ease-in-out hover:border-primary " 
+                            id="img" onClick={() => mainImg.current.click()}>{!(image)?'Upload':'Replace'}</div> 
+ */}
           {err && (
             <div className="w-50 sm:-m-12">
               <Err errMsg={err} />
             </div>
           )}
 
-          {/* {loading && (
+          {loading && (
             <div className="w-50 sm:-m-12">
               <Loading />
             </div>
-          )} */}
+          )}
 
           <button
-            className={`$shadow appearance-none bg-primary my-4 text-white rounded p-2 w-full hover:text-primary hover:bg-white transition duration-500 ease-in-out`}
+            className={`${
+              loading ? "cursor-not-allowed" : ""
+            } shadow appearance-none bg-primary my-4 text-white rounded p-2 w-full hover:text-primary hover:bg-white transition duration-500 ease-in-out`}
             type="submit"
           >
             Submit
